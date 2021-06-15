@@ -25,15 +25,17 @@ import io.netty.util.CharsetUtil;
 import java.time.format.DateTimeFormatter;  
 import java.time.LocalDateTime;  
 
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
 import java.util.Set;
+
+import org.apache.commons.io.IOUtils;
 
 import static io.netty.handler.codec.http.HttpResponseStatus.*;
 import static io.netty.handler.codec.http.HttpVersion.*;
@@ -76,9 +78,10 @@ public class HttpSnoopServerHandler extends SimpleChannelInboundHandler<Object> 
 			}
 			if (request.uri().equals("/styles")) {
 				type = "css";
-				File file = new File(getClass().getClassLoader().getResource("styles.css").getFile());
+				//File file = new File(getClass().getClassLoader().getResource("styles.css").getFile());
+				InputStream rs = getClass().getClassLoader().getResourceAsStream("styles.css");
 				try {
-					buf.append(new String(Files.readAllBytes(file.toPath())));
+					buf.append(IOUtils.toString(rs, StandardCharsets.UTF_8));
 					while (buf.toString().contains("{{uri}}")) {
 						buf.replace(buf.indexOf("{{uri}}"), buf.indexOf("{{uri}}") + "{{uri}}".length(),
 								request.headers().get(HttpHeaderNames.HOST, "unknown"));
@@ -89,9 +92,10 @@ public class HttpSnoopServerHandler extends SimpleChannelInboundHandler<Object> 
 				}
 			} else if (request.uri().equals("/javascript")) {
 				type = "javascript";
-				File file = new File(getClass().getClassLoader().getResource("script.js").getFile());
+				//File file = new File(getClass().getClassLoader().getResource("script.js").getFile());
+				InputStream rs2 = getClass().getClassLoader().getResourceAsStream("script.js");
 				try {
-					buf.append(new String(Files.readAllBytes(file.toPath())));
+					buf.append(buf.append(IOUtils.toString(rs2, StandardCharsets.UTF_8)));
 					//buf.replace(buf.indexOf("{{uri}}"), buf.indexOf("{{uri}}") + "{{uri}}".length(),
 					//		request.headers().get(HttpHeaderNames.HOST, "unknown"));
 				} catch (IOException e) {
@@ -102,9 +106,11 @@ public class HttpSnoopServerHandler extends SimpleChannelInboundHandler<Object> 
 				type = "image";
 				// System.err.println("reading file ");
 				if (image == null) {
-					File file = new File(getClass().getClassLoader().getResource("background.jpg").getFile());
+					//File file = new File(getClass().getClassLoader().getResource("background.jpg").getFile());
+					InputStream rs3 = getClass().getClassLoader().getResourceAsStream("background.jpg");
 					try {
-						image = Files.readAllBytes(file.toPath());
+						//image = Files.readAllBytes(file.toPath());
+						image=IOUtils.toByteArray(rs3);
 					} catch (IOException e) {
 						// terminate conection if fail
 						writeResponseError(ctx, e.getMessage());
@@ -112,10 +118,11 @@ public class HttpSnoopServerHandler extends SimpleChannelInboundHandler<Object> 
 				}
 			} else {
 				type = "html";
-				File file = new File(getClass().getClassLoader().getResource("index.html").getFile());
-				
+				//File file = new File(getClass().getClassLoader().getResource("index.html").getFile());
+				InputStream rs4 = getClass().getClassLoader().getResourceAsStream("index.html");
 				try {
-					buf.append(new String(Files.readAllBytes(file.toPath())));
+					//buf.append(new String(Files.readAllBytes(file.toPath())));
+					buf.append(IOUtils.toString(rs4, StandardCharsets.UTF_8));
 				} catch (IOException e) {
 					// terminate conection if fail
 					writeResponseError(ctx, e.getMessage());
