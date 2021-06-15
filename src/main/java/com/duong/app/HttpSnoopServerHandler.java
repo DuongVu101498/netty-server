@@ -85,7 +85,7 @@ public class HttpSnoopServerHandler extends SimpleChannelInboundHandler<Object> 
 					}
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
-					writeResponseError(ctx);
+					writeResponseError(ctx, e.getMessage());
 				}
 			} else if (request.uri().equals("/javascript")) {
 				type = "javascript";
@@ -96,7 +96,7 @@ public class HttpSnoopServerHandler extends SimpleChannelInboundHandler<Object> 
 					//		request.headers().get(HttpHeaderNames.HOST, "unknown"));
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
-					writeResponseError(ctx);
+					writeResponseError(ctx, e.getMessage());
 				}
 			} else if (request.uri().equals("/background")) {
 				type = "image";
@@ -107,7 +107,7 @@ public class HttpSnoopServerHandler extends SimpleChannelInboundHandler<Object> 
 						image = Files.readAllBytes(file.toPath());
 					} catch (IOException e) {
 						// terminate conection if fail
-						writeResponseError(ctx);
+						writeResponseError(ctx, e.getMessage());
 					}
 				}
 			} else {
@@ -118,7 +118,7 @@ public class HttpSnoopServerHandler extends SimpleChannelInboundHandler<Object> 
 					buf.append(new String(Files.readAllBytes(file.toPath())));
 				} catch (IOException e) {
 					// terminate conection if fail
-					writeResponseError(ctx);
+					writeResponseError(ctx, e.getMessage());
 				}
 				while (buf.toString().contains("{{uri}}")) {
 					buf.replace(buf.indexOf("{{uri}}"), buf.indexOf("{{uri}}") + "{{uri}}".length(),
@@ -187,7 +187,7 @@ public class HttpSnoopServerHandler extends SimpleChannelInboundHandler<Object> 
 		if (msg instanceof HttpContent)
 
 		{
-			// thuc thi neu l‡ get html
+			// thuc thi neu l√† get html
 			if (type.equals("html info")) {
 				HttpContent httpContent = (HttpContent) msg;
 				ByteBuf content = httpContent.content();
@@ -201,7 +201,7 @@ public class HttpSnoopServerHandler extends SimpleChannelInboundHandler<Object> 
 			}
 			if (msg instanceof LastHttpContent) {
 				LastHttpContent trailer = (LastHttpContent) msg;
-				// thuc thi neu l‡ get html
+				// thuc thi neu l√† get html
 				if (type.equals("html info")) {
 					//buf2.append("<p>END OF CONTENT</p>\r\n");
 					if (!trailer.trailingHeaders().isEmpty()) {
@@ -340,9 +340,9 @@ public class HttpSnoopServerHandler extends SimpleChannelInboundHandler<Object> 
 		// return false;
 	}
 
-	private void writeResponseError(ChannelHandlerContext ctx) {
+	private void writeResponseError(ChannelHandlerContext ctx, String msg) {
 		FullHttpResponse response = new DefaultFullHttpResponse(HTTP_1_1, NOT_FOUND,
-				Unpooled.copiedBuffer("could not load resource", CharsetUtil.UTF_8));
+				Unpooled.copiedBuffer(msg, CharsetUtil.UTF_8));
 		ctx.writeAndFlush(response).addListener(ChannelFutureListener.CLOSE);
 	}
 	private void writeResponse304(ChannelHandlerContext ctx) {
