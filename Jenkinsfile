@@ -2,6 +2,7 @@ pipeline {
     agent none
     environment {
                 DEPLOY_TO_PRODUCTION = 'true'
+                DO_LOAD_TEST= 'false'
             }
     stages{
         stage('run on linux'){
@@ -45,6 +46,9 @@ pipeline {
                   }
               }
               stage('Load testing'){
+                 when{
+                      environment name: 'DO_LOAD_TEST', value: 'true'
+                 }
                  agent {label 'window'}
                   steps {
                           build job: 'load-test-2'
@@ -59,8 +63,7 @@ pipeline {
               }
               stage('Production deploy'){
                   when{
-                      beforeOptions true
-                      environment name: 'DEPLOY_TO_PRODUCTION', value: 'true'
+                       environment name: 'DEPLOY_TO_PRODUCTION', value: 'true'
                   }
                   steps {
                     script {
