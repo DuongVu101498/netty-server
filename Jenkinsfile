@@ -33,7 +33,7 @@ pipeline {
                 steps {
                     script {
                       withDockerRegistry(credentialsId: 'docker-hub-secret') {
-                          docker_image.push("test-${env.BUILD_ID}")
+                          docker_image.push("test-V${env.BUILD_ID}")
                       }
                     }
                 }
@@ -68,7 +68,7 @@ pipeline {
                   steps {
                     script {
                       withDockerRegistry(credentialsId: 'docker-hub-secret') {
-                          docker_image.push("production-${env.BUILD_ID}")
+                          docker_image.push("production-V${env.BUILD_ID}")
                           docker_image.push('latest')
                       }
                     }
