@@ -126,7 +126,7 @@ public class HttpSnoopServerHandler extends SimpleChannelInboundHandler<Object> 
 				}
 				while (buf.toString().contains("{{message}}")) {
 				buf.replace(buf.indexOf("{{message}}"), buf.indexOf("{{message}}") + "{{message}}".length(),
-						request.uri().equals("/background")?getHello():"Default message");
+						getHello());
 				}
 				// buf2 is optional
 				//buf2.append("p>===================================</p>\r\n");
