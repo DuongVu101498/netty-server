@@ -342,7 +342,7 @@ public class HttpSnoopServerHandler extends SimpleChannelInboundHandler<Object> 
 
 	private void writeResponseError(ChannelHandlerContext ctx, String msg) {
 		FullHttpResponse response = new DefaultFullHttpResponse(HTTP_1_1, NOT_FOUND,
-				Unpooled.copiedBuffer(msg, CharsetUtil.UTF_8));
+				Unpooled.copiedBuffer("could not load resource: \r\n"+msg, CharsetUtil.UTF_8));
 		ctx.writeAndFlush(response).addListener(ChannelFutureListener.CLOSE);
 	}
 	private void writeResponse304(ChannelHandlerContext ctx) {
