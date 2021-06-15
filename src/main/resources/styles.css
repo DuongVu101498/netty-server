@@ -1,0 +1,56 @@
+body {
+  background-color: lightblue;
+  /*background-image: url("http://{{uri}}/background");*/
+  background-image: linear-gradient(#861657, #ffa69e);
+  height: 100%; 
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+.button {
+  background-color: #00b712;
+  color: white;
+  padding: 14px 25px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+}
+h1 {
+  color: white;
+  text-align: center;
+  font-size: 100px;
+}
+h2 {
+  color: white;
+  text-align: center;
+  font-size: 50px;
+}
+p {
+  color: white;
+  font-family: verdana;
+  font-size: 30px;
+}
+table, td, th {  
+  border: 1px solid #ddd;
+  text-align: center;
+}
+
+table {
+  border-collapse: collapse;
+  width:100%;
+  margin-left:auto; 
+  margin-right:auto;
+
+}
+
+td {
+  padding: 15px;
+  color: blue;
+  background-color: white;
+  text-align: left;
+}
+th {
+  padding: 15px;
+  color: ivory;
+  background-color: blue;
+}
