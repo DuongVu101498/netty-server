@@ -84,6 +84,7 @@ pipeline {
      post {
         always {
             node('linux'){
+               kubectl delete service/netty deployment.apps/netty -n staging
                echo 'One way or another, I have finished'
             }
         }
