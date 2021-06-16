@@ -86,6 +86,9 @@ pipeline {
             node('linux'){
                sh  '''  kubectl delete service/netty deployment.apps/netty -n staging '''
                echo 'One way or another, I have finished'
+               emailext  body: '$DEFAULT_CONTENT',
+                         subject: '$DEFAULT_SUBJECT',
+                         to: 'vutienduongmaple1998@gmail.com'
             }
         }
         success {
