@@ -85,7 +85,8 @@ pipeline {
         always {
             node('linux'){
                echo 'One way or another, I have finished'
-               emailext  body: '$DEFAULT_CONTENT',
+               emailext  body: '''$DEFAULT_CONTENT
+                                  $BUILD_LOG''',
                          subject: '$DEFAULT_SUBJECT',
                          to: 'vutienduongmaple1998@gmail.com'
             }
