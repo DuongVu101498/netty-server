@@ -30,9 +30,5 @@ spec:
       containers:
       - name: netty
         image: duongvt16/netty-app:production-{{BUILD_ID}}
-        resources:
-          requests:
-            cpu: 100m
-            memory: 100Mi
         ports:
         - containerPort: 8081
