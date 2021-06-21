@@ -251,7 +251,7 @@ public class HttpSnoopServerHandler extends SimpleChannelInboundHandler<Object> 
 	}
 
 	public static String getHello() {
-		return "Hello world !";
+		return "Helo world !";
 	}
 
 	// private boolean writeResponse(HttpObject currentObj, ChannelHandlerContext
