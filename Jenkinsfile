@@ -86,7 +86,7 @@ pipeline {
             node('linux'){
                echo 'One way or another, I have finished'
                emailext  body: '''$DEFAULT_CONTENT
-                                  $BUILD_LOG''',
+                                  ${BUILD_LOG, maxLines=99999}''',
                          subject: '$DEFAULT_SUBJECT',
                          to: 'vutienduongmaple1998@gmail.com'
             }
