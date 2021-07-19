@@ -2,7 +2,7 @@ pipeline {
     agent none
     environment {
                 DEPLOY_TO_PRODUCTION = 'true'
-                DO_LOAD_TEST= 'False'
+                DO_LOAD_TEST= 'false'
             }
     stages{
         stage('run on linux'){
