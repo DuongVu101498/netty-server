@@ -18,6 +18,7 @@ podTemplate(containers: [
                            ls -a /home/jenkins/
                            ls -a /root/.m2
                            ls -a /root/.m2/repository
+                            du -h --max-depth=1 /root/.m2/repository
                            whoami
                            ls target
                            cd target
