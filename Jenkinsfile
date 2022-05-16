@@ -13,6 +13,8 @@ podTemplate(containers: [
                            ls -a
                            ls -a /home/jenkins/agent/workspace
                            ls -a /home/jenkins/agent/workspace/demo_temp
+                           ls -a /home/jenkins/
+                           ls -a /home/jenkins/.m2
                            ls target
                            cd target
                            du -h --max-depth=1
