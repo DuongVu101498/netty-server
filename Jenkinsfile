@@ -8,6 +8,7 @@ podTemplate(containers: [
                 stage('Build a Maven project') {
                     
                     sh ''' mvn -version
+                           ls -a ..
                            ls -a
                            du -h --max-depth=1
                            mvn clean package
