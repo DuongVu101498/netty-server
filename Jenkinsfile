@@ -4,13 +4,13 @@ podTemplate(containers: [
 
     node(POD_LABEL) {
         stage('Get a Maven project') {
-            git 'https://github.com/DuongVu101498/netty-server.git'
             container('maven') {
                 stage('Build a Maven project') {
                     sh ''' mvn -version
                            pwd
                            ls -a
-                           du -h --max-depth=1
+                           ls -a /home/jenkins/agent/workspace
+                           ls -a /home/jenkins/agent/workspace/demo_temp
                            mvn clean package
                            ls target
                            cd target
