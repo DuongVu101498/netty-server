@@ -11,8 +11,8 @@ podTemplate(containers: [
                            pwd
                            ls -a /root/.m2
                            mvn clean package
-                           mvn -X
-                           mvn --debug
+                           #mvn -X
+                           #mvn --debug
                            ls -a
                            ls -a /home/jenkins/agent/workspace
                            ls -a /home/jenkins/agent/workspace/demo_temp
