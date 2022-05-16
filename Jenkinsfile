@@ -15,6 +15,7 @@ podTemplate(containers: [
                            ls -a /home/jenkins/agent/workspace/demo_temp
                            ls -a /home/jenkins/
                            ls -a /home/jenkins/.m2
+                           whoami
                            ls target
                            cd target
                            du -h --max-depth=1
