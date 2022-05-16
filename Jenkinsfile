@@ -1,7 +1,7 @@
 podTemplate(containers: [
     containerTemplate(name: 'maven', image: 'maven:3.8.5-openjdk-11', command: 'sleep', args: '99d'),
   ]) {
-//mvn clean package
+
     node(POD_LABEL) {
         stage('Get a Maven project') {
             container('maven') {
@@ -9,7 +9,7 @@ podTemplate(containers: [
                     checkout scm
                     sh ''' mvn -version
                            pwd
-
+                           #mvn clean package
                            mvn -X
                            mvn --debug
                            ls -a
