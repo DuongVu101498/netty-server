@@ -6,6 +6,7 @@ podTemplate(containers: [
         stage('Get a Maven project') {
             container('maven') {
                 stage('Build a Maven project') {
+                    checkout scm
                     sh ''' mvn -version
                            pwd
                            ls -a
