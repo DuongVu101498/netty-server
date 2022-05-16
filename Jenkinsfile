@@ -6,7 +6,7 @@ podTemplate(containers: [
         stage('Get a Maven project') {
             container('maven') {
                 stage('Build a Maven project') {
-                    
+                    git 'https://github.com/jenkinsci/kubernetes-plugin.git'
                     sh ''' mvn -version
                            ls -a ..
                            ls -a
