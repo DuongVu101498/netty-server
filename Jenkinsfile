@@ -1,37 +1,19 @@
-pipeline {
-  agent {
-    kubernetes {
-      yaml '''
-        apiVersion: v1
-        kind: Pod
-        metadata:
-          labels:
-            some-label: some-label-value
-        spec:
-          containers:
-          - name: maven
-            image: maven:alpine
-            command:
-            - cat
-            tty: true
-          - name: busybox
-            image: busybox
-            command:
-            - cat
-            tty: true
-        '''
+podTemplate(containers: [
+    containerTemplate(name: 'maven', image: 'maven:3.8.1-jdk-15', command: 'sleep', args: '99d'),
+  ]) {
+
+    node(POD_LABEL) {
+        stage('Get a Maven project') {
+            container('maven') {
+                stage('Build a Maven project') {
+                    
+                    sh ''' mvn -version
+                           mvn clean package
+                           ls -a
+                           du -h --max-depth=1
+                           '''
+                }
+            }
+        }  
     }
-  }
-  stages {
-    stage('Run maven') {
-      steps {
-        container('maven') {
-          sh 'mvn -version'
-        }
-        container('busybox') {
-          sh '/bin/busybox'
-        }
-      }
-    }
-  }
 }
