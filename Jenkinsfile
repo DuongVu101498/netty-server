@@ -1,115 +1,37 @@
 pipeline {
-    agent none
-    environment {
-                DEPLOY_TO_PRODUCTION = 'true'
-                DO_LOAD_TEST= 'false'
-            }
-    stages{
-        stage('run on linux'){
-            agent {label 'linux'}
-            stages {
-              stage('Build') {
-                agent {
-                    docker {
-                       image 'maven:3.8.1-adoptopenjdk-15'
-                       args '-v $HOME/.m2:/root/.m2'
-                       reuseNode true
-                    }
-                 }
-                steps {
-                     sh '''mvn clean package
-                           '''
-                      }
-              }
-             stage("Build Docker image") {
-                steps {
-                  script {
-                    docker_image = docker.build("duongvt16/netty-app:${env.BUILD_ID}")
-                  }
-                }
-             }
-
-             stage("Push images") {
-                steps {
-                    script {
-                      withDockerRegistry(credentialsId: 'docker-hub-secret') {
-                          docker_image.push("test-${env.BUILD_ID}")
-                      }
-                    }
-                }
-              }
-              stage('Staging deploy'){
-                  steps {
-                      sh ''' cat "k8s/staging-deploy.yaml" | sed "s/{{BUILD_ID}}/$BUILD_ID/g" | kubectl apply -n staging -f -
-                             kubectl rollout status deployment.apps/netty -n staging --timeout=2m
-                          '''
-                  }
-              }
-              stage('Load testing'){
-                 when{
-                      environment name: 'DO_LOAD_TEST', value: 'true'
-                 }
-                 agent {label 'window'}
-                  steps {
-                          build job: 'load-test'
-                        }
-                  post{
-                      always{
-                          node('linux'){
-                              sh ''' kubectl delete service/netty deployment.apps/netty -n staging'''
-                          }
-                      }
-                  }
-              }
-              stage('Production deploy'){
-                  when{
-                       environment name: 'DEPLOY_TO_PRODUCTION', value: 'true'
-                  }
-                  steps {
-                    script {
-                      withDockerRegistry(credentialsId: 'docker-hub-secret') {
-                          docker_image.push("production-${env.BUILD_ID}")
-                          docker_image.push('latest')
-                      }
-                    }
-                    sh ''' cat "k8s/production-deploy.yaml" | sed "s/{{BUILD_ID}}/$BUILD_ID/g" | kubectl apply -n production --record=true -f -
-                         kubectl rollout status deployment.apps/netty -n production --timeout=2m
-                     '''
-                  }
-              }
-                
-           }
-        }
+  agent {
+    kubernetes {
+      yaml '''
+        apiVersion: v1
+        kind: Pod
+        metadata:
+          labels:
+            some-label: some-label-value
+        spec:
+          containers:
+          - name: maven
+            image: maven:alpine
+            command:
+            - cat
+            tty: true
+          - name: busybox
+            image: busybox
+            command:
+            - cat
+            tty: true
+        '''
     }
-     post {
-        always {
-            node('linux'){
-               echo 'One way or another, I have finished'
-               emailext  body: '''$DEFAULT_CONTENT
-                                  ${BUILD_LOG, maxLines=99999}''',
-                         subject: '$DEFAULT_SUBJECT',
-                         to: 'vutienduongmaple1998@gmail.com'
-            }
+  }
+  stages {
+    stage('Run maven') {
+      steps {
+        container('maven') {
+          sh 'mvn -version'
         }
-        success {
-            node('linux'){
-               echo 'I succeeded!'
-               sh  '''   kubectl describe deployment netty -n production
-                         kubectl rollout history deployment.apps/netty -n production
-                         kubectl get rs -n production
-               '''
-            }
+        container('busybox') {
+          sh '/bin/busybox'
         }
-        unstable {
-            node('linux'){
-               echo 'I am unstable :/'
-            }
-        }
-        failure {
-            node('linux'){
-               echo 'I failed :('
-            }
-        }
+      }
     }
+  }
 }
-
