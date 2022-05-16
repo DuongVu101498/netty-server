@@ -1,5 +1,5 @@
 podTemplate(containers: [
-    containerTemplate(name: 'maven', image: 'maven:3.8.1-adoptopenjdk-15', command: 'sleep', args: '99d'),
+    containerTemplate(name: 'maven', image: 'maven:3.8.1-openjdk-16', command: 'sleep', args: '99d'),
   ]) {
 
     node(POD_LABEL) {
