@@ -9,13 +9,12 @@ podTemplate(containers: [
                     checkout scm
                     sh ''' mvn -version
                            pwd
-                           ls -a /root/.m2
+                           ls -a /root
                            mvn clean package
                            #mvn -X
                            #mvn --debug
                            ls -a
                            ls -a /home/jenkins/agent/workspace
-                           ls -a /home/jenkins/agent/workspace/demo_temp
                            ls -a /home/jenkins/
                            ls -a /root/.m2
                            whoami
