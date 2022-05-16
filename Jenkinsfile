@@ -9,10 +9,10 @@ podTemplate(containers: [
                     checkout scm
                     sh ''' mvn -version
                            pwd
+                           mvn clean package
                            ls -a
                            ls -a /home/jenkins/agent/workspace
                            ls -a /home/jenkins/agent/workspace/demo_temp
-                           mvn clean package
                            ls target
                            cd target
                            du -h --max-depth=1
