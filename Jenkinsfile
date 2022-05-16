@@ -17,6 +17,7 @@ podTemplate(containers: [
                            ls -a /home/jenkins/agent/workspace
                            ls -a /home/jenkins/
                            ls -a /root/.m2
+                           ls -a /root/.m2/repository
                            whoami
                            ls target
                            cd target
