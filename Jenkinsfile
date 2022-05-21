@@ -13,7 +13,7 @@ spec:
         - sleep
       args:
         - 99d
-    - name: docker-client
+    - name: docker
       image: docker:19.03.1
       command: ['sleep', '99d']
       env:
