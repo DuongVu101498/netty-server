@@ -1,5 +1,5 @@
 podTemplate(
-    containers: [containerTemplate(name: 'maven', image: 'maven:3.8.5-openjdk-11', command: 'sleep', args: '99d'),],
+    containers: [containerTemplate(name: 'maven', image: 'maven:3.8.5-openjdk-11'),],
     volumes: [
        persistentVolumeClaim(mountPath: '/root/.m2', claimName: 'jenkins-cache', readOnly: 'false')
     ]) {
@@ -27,6 +27,7 @@ podTemplate(
                            #du -h --max-depth=1
                            '''
                 }
+               
             }
         }  
     }
