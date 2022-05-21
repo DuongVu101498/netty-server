@@ -1,34 +1,59 @@
 podTemplate(
-    containers: [containerTemplate(name: 'maven', image: 'maven:3.8.5-openjdk-11', command: 'sleep', args: '99d'),],
-    volumes: [
-       persistentVolumeClaim(mountPath: '/root/.m2', claimName: 'jenkins-cache', readOnly: 'false')
-    ]) {
+    '''
+apiVersion: v1
+kind: Pod
+spec:
+  containers:
+    - name: maven
+      image: 'maven:3.8.5-openjdk-11'
+      volumeMounts:
+        - name: cache
+          mountPath: /root/.m2
+      command:
+        - sleep
+      args:
+        - 99d
+    - name: docker-client
+      image: docker:19.03.1
+      command: ['sleep', '99d']
+      env:
+        - name: DOCKER_HOST
+          value: tcp://localhost:2375
+    - name: docker-daemon
+      image: docker:19.03.1-dind
+      env:
+        - name: DOCKER_TLS_CERTDIR
+          value: ""
+      securityContext:
+        privileged: true
+      volumeMounts:
+        - name: private-registries
+          mountPath: /etc/docker/daemon.json
+          subPath: daemon.json
+  volumes:
+    - name: private-registries
+      configMap:
+        name: docker-agent
+    - name: cache
+      persistentVolumeClaim:
+        claimName: jenkins-cache
+
+'''
+) {
 
     node(POD_LABEL) {
-        stage('Get a Maven project') {
             container('maven') {
                 stage('Build a Maven project') {
                     checkout scm
-                    sh ''' #mvn -version
-                           #pwd
-                           #ls -a /root
-                           mvn clean package
-                           #mvn -X
-                           #mvn --debug
-                           #ls -a
-                           #ls -a /home/jenkins/agent/workspace
-                           #ls -a /home/jenkins/
-                           #ls -a /root/.m2
-                           #ls -a /root/.m2/repository
-                           # du -h --max-depth=1 /root/.m2/repository
-                           #whoami
-                           #ls target
-                           #cd target
-                           #du -h --max-depth=1
-                           '''
-                }
-               
+                    sh ''' mvn clean package'''
+                }  
+            } 
+            container('docker')   {
+                stage('Containerization') {
+                    docker_image = docker.build("java-app:v1")
+                    withDockerRegistry(url: 'sonatype-nexus-nexus-repository-manager-docker-5000.nexus:5000', credentialsId: 'docker-registry-credential') {
+                          docker_image.push()
+                }  
             }
-        }  
     }
 }
