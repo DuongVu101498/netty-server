@@ -1,4 +1,4 @@
-podTemplate(yaml:
+podTemplate(
     '''
 apiVersion: v1
 kind: Pod
@@ -42,7 +42,6 @@ spec:
 ) {
 
     node(POD_LABEL) {
-        stage('Get a Maven project') {
             container('maven') {
                 stage('Build a Maven project') {
                     checkout scm
@@ -57,6 +56,5 @@ spec:
                 }  
             }
             }
-        }
     }
 }
