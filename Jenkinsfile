@@ -9,22 +9,22 @@ podTemplate(
             container('maven') {
                 stage('Build a Maven project') {
                     checkout scm
-                    sh ''' mvn -version
-                           pwd
-                           ls -a /root
+                    sh ''' #mvn -version
+                           #pwd
+                           #ls -a /root
                            mvn clean package
                            #mvn -X
                            #mvn --debug
-                           ls -a
-                           ls -a /home/jenkins/agent/workspace
-                           ls -a /home/jenkins/
-                           ls -a /root/.m2
-                           ls -a /root/.m2/repository
-                            du -h --max-depth=1 /root/.m2/repository
-                           whoami
-                           ls target
-                           cd target
-                           du -h --max-depth=1
+                           #ls -a
+                           #ls -a /home/jenkins/agent/workspace
+                           #ls -a /home/jenkins/
+                           #ls -a /root/.m2
+                           #ls -a /root/.m2/repository
+                           # du -h --max-depth=1 /root/.m2/repository
+                           #whoami
+                           #ls target
+                           #cd target
+                           #du -h --max-depth=1
                            '''
                 }
             }
