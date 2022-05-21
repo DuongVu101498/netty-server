@@ -42,6 +42,7 @@ spec:
 ) {
 
     node(POD_LABEL) {
+        stage('Get a Maven project') {
             container('maven') {
                 stage('Build a Maven project') {
                     checkout scm
@@ -55,6 +56,7 @@ spec:
                           docker_image.push()
                 }  
             }
+            }
+        }
     }
-}
 }
