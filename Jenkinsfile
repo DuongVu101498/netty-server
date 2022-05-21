@@ -51,7 +51,7 @@ spec:
             container('docker')   {
                 stage('Containerization') {
                     docker_image = docker.build("java-app:v1")
-                    withDockerRegistry(url: 'sonatype-nexus-nexus-repository-manager-docker-5000.nexus:5000', credentialsId: 'docker-registry-credential') {
+                    withDockerRegistry(url: 'http://sonatype-nexus-nexus-repository-manager-docker-5000.nexus:5000', credentialsId: 'docker-registry-credential') {
                           docker_image.push()
                 }  
             }
